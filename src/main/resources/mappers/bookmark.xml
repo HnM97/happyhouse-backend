@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.bookmark.model.dao.BookmarkDao">
+    <resultMap type="Bookmark" id="bookmark">
+        <result column="user_id" property="userId" />
+        <result column="aptCode" property="aptCode"/>
+        <result column="dongCode" property="dongCode"/>
+        <result column="buildYear" property="buildYear"/>
+        <result column="apartmentName" property="apartmentName"/>
+        <result column="roadName" property="roadName"/>
+        <result column="jibun" property="jibun"/>
+        <result column="lng" property="lng"/>
+        <result column="lat" property="lat"/>
+    </resultMap>
+
+    <insert id="createBookmark" parameterType="hashMap">
+        insert into bookmark (user_id, aptCode, dongCode)
+        values (#{userId}, #{aptCode}, #{dongCode})
+    </insert>
+
+    <delete id="deleteBookmark" parameterType="hashMap" >
+        delete from bookmark
+        where user_id = #{userId} and aptCode = #{aptCode}
+    </delete>
+
+    <select id="selectAptById" parameterType="String" resultMap="bookmark">
+        select user_id, aptCode, dongCode, apartmentName, buildYear, roadName, jibun, lng, lat
+        from bookmarkinfo
+        where user_id = #{userId}
+    </select>
+
+
+</mapper>

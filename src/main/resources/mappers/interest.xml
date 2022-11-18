@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.interest.model.dao.InterestDao">
+	<resultMap type="Interest" id="interest">
+		<result column="user_id" property="userId"/>
+		<result column="dongcode" property="dongCode"/>
+	</resultMap>
+	
+	<select id="getInterestList" parameterType="string" resultMap="interest">
+		SELECT user_id, sidoname, gugunname, dongname, interest.dongcode dongcode
+		from interest, dongcode 
+		where interest.dongcode = left(dongCode.dongcode,8) and user_id = #{userId} 
+	</select>
+	
+	<insert id="addInterest" parameterType="map">
+		insert into interest (user_id, dongcode)
+		values (#{userId},#{dongCode})
+	</insert>
+	
+	<delete id="deleteInterest" parameterType="map">
+		delete from interest 
+		where user_id = #{userId} and dongcode = #{dongCode} 
+	</delete>
+	
+	<select id="getNames" parameterType="string" resultType="string">
+		select sidoName, gugunName, dongName 
+		from dongcode
+		where left(dongCode,8) = #{dongCode} 
+	</select>
+	
+	<select id="countInterest" parameterType="string" resultType="int">
+		select count(*) cnt from interest 
+		where user_id = #{userId}
+	</select>
+</mapper>
+

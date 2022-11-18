@@ -1,92 +1,107 @@
-# backend
+# 구해줘 홈즈(WhereIsMyHome) Project
 
+## [Web Spring PJT]
 
+- 2022 . 11 . 02
+- 6조 : 박주희, 조현민
 
-## Getting started
+1 . 목표
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- 웹 아키텍처를 이해하고 활용할 수 있다.
+- Spring Framework와 RestAPI를 활용하여 웹 서버를 구축할 수 있다.
+- myBatis Framework를 활용하여 DB를 연동할 수 있다.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+2 . 준비사항
 
-## Add your files
+- 사용 데이터
+  : 국토교통부 아파트/ 연립다세대 실거래가 자료 (제공)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- 개발언어 / 프로그램
+  : Java / STS / Tomcat / MySQL
 
-```
-cd existing_repo
-git remote add origin https://lab.ssafy.com/s08/a18/project/finalproject/s6/backend.git
-git branch -M master
-git push -uf origin master
-```
+- 필수 라이브러리 / 오픈소스
+  : Spring Framework (Spring Boot) / MyBatis Framework
 
-## Integrate with your tools
+3 . 요구사항
 
-- [ ] [Set up project integrations](https://lab.ssafy.com/s08/a18/project/finalproject/s6/backend/-/settings/integrations)
+> **이번 관통 프로젝트는 WhereIsMyHome 프로젝트의 Back-End 부분을 Spring Framework와 MyBatis Framework로 변경하여 구현한다.**
 
-## Collaborate with your team
+4 . 참고화면
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+![구해줘홈즈.jpg](imgForReadme/구해줘홈즈.jpg)
 
-## Test and Deploy
+### 회원관리
 
-Use the built-in continuous integration in GitLab.
+![회원관리.jpg](imgForReadme/회원관리.jpg)
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+|                Parameters                |                Responses                 |
+| :--------------------------------------: | :--------------------------------------: |
+| ![로그인1.jpg](imgForReadme/로그인1.jpg) | ![로그인2.jpg](imgForReadme/로그인2.jpg) |
 
-***
+|                  Parameters                   |                  Responses                   |
+| :-------------------------------------------: | :------------------------------------------: |
+| <![회원가입1.jpg](imgForReadme/회원가입1.jpg) | ![회원가입2.jpg](imgForReadme/회원가입2.jpg) |
 
-# Editing this README
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![회원정보수정1.jpg](imgForReadme/회원정보수정1.jpg) | ![회원정보수정2.jpg](imgForReadme/회원정보수정2.jpg) |
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+|                  Parameters                  |                  Responses                   |
+| :------------------------------------------: | :------------------------------------------: |
+| ![회원탈퇴1.jpg](imgForReadme/회원탈퇴1.jpg) | ![회원탈퇴2.jpg](imgForReadme/회원탈퇴2.jpg) |
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### 아파트
 
-## Name
-Choose a self-explaining name for your project.
+![아파트.jpg](imgForReadme/아파트.jpg)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+|                    Parameters                    |                    Responses                     |
+| :----------------------------------------------: | :----------------------------------------------: |
+| ![아파트목록1.jpg](imgForReadme/아파트목록1.jpg) | ![아파트목록2.jpg](imgForReadme/아파트목록2.jpg) |
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+|                        Parameters                        |                        Responses                         |
+| :------------------------------------------------------: | :------------------------------------------------------: |
+| ![아파트거래내역1.jpg](imgForReadme/아파트거래내역1.jpg) | ![아파트거래내역2.jpg](imgForReadme/아파트거래내역2.jpg) |
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### 관심지역
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+![관심지역.jpg](imgForReadme/관심지역.jpg)
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![관심지역추가1.png](imgForReadme/관심지역추가1.png) | ![관심지역추가2.png](imgForReadme/관심지역추가2.png) |
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![관심지역삭제1.png](imgForReadme/관심지역삭제1.png) | ![관심지역삭제2.png](imgForReadme/관심지역삭제2.png) |
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![관심지역목록1.jpg](imgForReadme/관심지역목록1.jpg) | ![관심지역목록2.jpg](imgForReadme/관심지역목록2.jpg) |
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+|                  Parameters                  |                  Responses                   |
+| :------------------------------------------: | :------------------------------------------: |
+| ![지역목록1.jpg](imgForReadme/지역목록1.jpg) | ![지역목록2.jpg](imgForReadme/지역목록2.jpg) |
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### 공지사항
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+![공지사항.jpg](imgForReadme/공지사항.jpg)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![공지사항목록1.jpg](imgForReadme/공지사항목록1.jpg) | ![공지사항목록2.jpg](imgForReadme/공지사항목록2.jpg) |
 
-## License
-For open source projects, say how it is licensed.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![공지사항작성1.jpg](imgForReadme/공지사항작성1.jpg) | ![공지사항작성2.jpg](imgForReadme/공지사항작성2.jpg) |
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![공지사항수정1.jpg](imgForReadme/공지사항수정1.jpg) | ![공지사항수정2.jpg](imgForReadme/공지사항수정2.jpg) |
+
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![공지사항삭제1.jpg](imgForReadme/공지사항삭제1.jpg) | ![공지사항삭제2.jpg](imgForReadme/공지사항삭제2.jpg) |
+
+|                      Parameters                      |                      Responses                       |
+| :--------------------------------------------------: | :--------------------------------------------------: |
+| ![공지사항조회1.jpg](imgForReadme/공지사항조회1.jpg) | ![공지사항조회2.jpg](imgForReadme/공지사항조회2.jpg) |
