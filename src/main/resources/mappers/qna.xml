@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.qna.model.dao.QnaDao">
+
+    <resultMap type="Qna" id="qna">
+        <result column="article_no" property="articleNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="subject" property="subject"/>
+        <result column="content" property="content"/>
+        <result column="hit" property="hit"/>
+        <result column="register_time" property="registerTime"/>
+    </resultMap>
+
+    <resultMap type="Memo" id="memo">
+        <result column="memo_no" property="memoNo"/>
+        <result column="article_no" property="articleNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="comment" property="comment"/>
+        <result column="memo_time" property="memoTime"/>
+    </resultMap>
+
+    <sql id="search">
+        <if test="word != null and word != ''">
+            <if test="key == 'subject'">
+                and subject like concat('%', #{word}, '%')
+            </if>
+            <if test="key != 'subject'">
+                and ${key} = #{word}
+            </if>
+        </if>
+    </sql>
+
+    <insert id="writeQna" parameterType="Qna">
+        insert into qna (user_id, subject, content, hit, register_time)
+        values (#{userId}, #{subject}, #{content}, 0, now())
+        <selectKey resultType="int" keyProperty="articleNo" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <select id="listQna" parameterType="map" resultMap="qna">
+        select q.article_no, q.user_id, q.subject, q.content, q.hit, q.register_time, m.user_name
+        from qna q, members m
+        where q.user_id = m.user_id
+        <include refid="search"></include>
+        order by q.article_no desc
+        limit #{start}, #{listsize}
+    </select>
+
+    <select id="getQna" parameterType="int" resultMap="qna">
+        select q.article_no, q.user_id, q.subject, q.content, q.hit, q.register_time, m.user_name
+        from qna q, members m
+        where q.user_id = m.user_id
+          and q.article_no = #{qnaNo}
+    </select>
+
+    <update id="updateHit" parameterType="int">
+        update qna
+        set hit = hit + 1
+        where article_no = #{qnaNo}
+    </update>
+
+    <update id="modifyQna" parameterType="Qna">
+        update board
+        set subject = #{subject}, content = #{content}
+        where article_no = #{qnaNo}
+    </update>
+
+    <delete id="deleteQna" parameterType="int">
+        delete from qna
+        where article_no = #{qnaNo}
+    </delete>
+
+    <select id="getTotalArticleCount" parameterType="map" resultType="int">
+        select count(article_no)
+        from board
+        <where>
+            <include refid="search"></include>
+        </where>
+    </select>
+
+    <insert id="writeMemo" parameterType="map">
+        insert into memo (article_no,user_id, comment, memo_time)
+        values (#{qnaNo}, #{memo.userId}, #{memo.comment}, now())
+    </insert>
+
+    <delete id="deleteMemo" parameterType="int">
+        delete from memo
+        where article_no = #{articleNo}
+    </delete>
+
+    <select id="listMemo" parameterType="int" resultMap="memo">
+        select memo_no, article_no, user_id, comment, memo_time
+        from memo
+        where article_no = #{articleNo}
+    </select>
+</mapper>
