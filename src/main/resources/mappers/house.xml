@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.house.model.dao.HouseDao">
+
+	<resultMap type="House" id="house">
+		<result column="aptCode" property="aptCode"/>
+		<result column="dongCode" property="dongCode"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="apartmentName" property="apartmentName"/>
+		<result column="roadName" property="roadName"/>
+		<result column="jibun" property="jibun"/>
+		<result column="lng" property="lng"/>
+		<result column="lat" property="lat"/>
+	</resultMap>
+	
+	
+	<select id="selectApt" parameterType= "string" resultMap="house">
+		select apartmentName, buildYear, roadName, jibun, dealYear, dealMonth, dealDay, area, dealAmount
+		from house
+		where aptCode = #{aptCode}
+		order by dealyear desc, dealmonth desc, dealday desc
+	</select>
+	
+	<select id="selectDong" parameterType="string" resultMap="house">
+		select aptCode, apartmentName, buildyear, roadName, jibun, lng, lat
+		from apartment
+		where left(dongCode,8) = #{dongCode}	
+	</select>
+
+		<select id="getSiDoList" resultType="map">
+		select dongCode, sidoName
+		from sido
+	</select>
+
+	<select id="getGuGunList" parameterType="string"
+		resultType="map">
+		select g.dongCode, g.gugunName
+		from sido as s, gugun as g
+		where s.dongCode = left(g.dongCode,2) and s.dongCode =
+		#{siDoDongCode}
+	</select>
+
+	<select id="getDongList" parameterType="string"
+		resultType="map">
+		select d.dongCode, d.dongName
+		from gugun as g, dong as d
+		where g.dongCode = left(d.dongCode,5) and g.dongCode =
+		#{guGunDongCode}
+	</select>
+	
+	
+	<select id="searchByCondition" parameterType="java.util.HashMap" resultType="house">
+		select distinct aptCode, apartmentName, buildyear, roadName, jibun, lng, lat
+		from house
+		<where>
+			dongCode = #{dongCode}
+			<if test ="buildYearStart != null">
+				and buildyear &gt;= #{buildYearStart}
+			</if>
+			<if test ="buildYearEnd != null">
+				and buildyear &lt;= #{buildYearEnd}
+			</if>
+			<if test="amountStart != null">
+				and dealamount &gt;= #{amountStart}
+			</if>
+			<if test="amountEnd != null">
+				and dealamount &lt;= #{amountEnd}
+			</if>
+		</where>
+	</select>
+
+</mapper>
+
