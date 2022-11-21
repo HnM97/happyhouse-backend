@@ -9,11 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.ssafy.happyhouse.house.model.House;
 import com.ssafy.happyhouse.house.model.service.HouseService;
 
@@ -21,6 +17,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import javax.xml.ws.Response;
+
 @RestController
 @Api(tags="아파트  API")
 @RequestMapping("/house")
@@ -112,14 +111,41 @@ public class HouseController{
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@ApiOperation(value = "키워드를 Regcode 변환해줍니다", notes = "입력한 키워드로 Regcode를 가져옵니다..")
+	@ApiResponses({ @ApiResponse(code = 200, message = "가져오기 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+			@ApiResponse(code = 500, message = "서버에러!!") })
+	@GetMapping("/search/{keyword}")
+	private ResponseEntity<?> keywordToReg(@PathVariable String keyword){
+//		logger.info(keyword);
+		try {
+			String regCode = houseService.getRegFromKeyword(keyword);
+			return new ResponseEntity<>(regCode, HttpStatus.OK);
+		} catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			map.put("dongCode", regCode);
+//
+//			List<House> list = houseService.searchByCondition(map);
+//			if(list != null && !list.isEmpty()) {
+//				return new ResponseEntity<List<House>>(list, HttpStatus.OK);
+//			} else {
+//
+//				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+//			}
+//		} catch (Exception e){
+//			e.printStackTrace();
+//			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+	}
+
 	@ApiOperation(value = "아파트 검색 필터링", notes = "조건에 맞는 아파트 리스트를 불러옵니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "필터링 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
 		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/search")
 	private ResponseEntity<?> search(@RequestParam Map<String,String> queryMap){
-		
 		logger.info(queryMap.toString());
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dongCode", queryMap.get("dongCode"));
 		if(queryMap.get("buildYearStart") != null) map.put("buildYearStart", Integer.parseInt(queryMap.get("buildYearStart")));

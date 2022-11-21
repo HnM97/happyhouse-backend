@@ -58,6 +58,41 @@ public class HouseServiceImpl implements HouseService {
 		return houseDao.searchByCondition(map);
 	}
 
-	
+	@Override
+	public List<Map<String, String>> getAllGuGunList() throws SQLException {
+		return houseDao.getAllGuGunList();
+	}
 
+	@Override
+	public List<Map<String, String>> getAllDongList() throws SQLException {
+		return houseDao.getAllDongList();
+	}
+
+	@Override
+	public String getRegFromKeyword(String keyword) throws SQLException {
+		List<Map<String, String>> sido = getSiDoList();
+		for(Map<String,String> s: sido){
+			if(s.get("sidoName").contains(keyword)){
+				return s.get("dongCode");
+			}
+		}
+
+		List<Map<String, String>> gugun = getAllGuGunList();
+
+		for(Map<String,String> g: gugun){
+			if(!g.containsKey("gugunname")) continue;
+			System.out.println(g.get("gugunname"));
+			if(g.get("gugunname").contains(keyword)){
+				return g.get("dongcode");
+			}
+		}
+		List<Map<String, String>> dong = getAllDongList();
+		for(Map<String,String> d: dong) {
+			if(!d.containsKey("dongname")) continue;
+			if (d.get("dongname").contains(keyword)) {
+				return d.get("dongcode");
+			}
+		}
+		return "none";
+	}
 }
