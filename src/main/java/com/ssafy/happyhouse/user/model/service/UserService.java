@@ -13,4 +13,10 @@ public interface UserService {
 	void modifyMember(User user) throws SQLException;
 	void deleteMember(String userId) throws SQLException;
 	User searchById(String userId) throws SQLException;
+	
+	public User login(User user) throws Exception;
+	public User userInfo(String userid) throws Exception;
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception;
+	public Object getRefreshToken(String userid) throws Exception;
+	public void deleRefreshToken(String userid) throws Exception;
 }
