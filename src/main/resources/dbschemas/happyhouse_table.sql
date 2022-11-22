@@ -140,11 +140,25 @@ select hi.aptCode, hi.dongcode, apartmentName, buildYear, dealAmount, area, deal
 from houseinfo hi, housedeal hd
 where hi.aptcode = hd.aptcode;
 
+
+drop view apartment;
+create view apartment as
+select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, lng, lat, min(cast(replace(dealAmount, ",","") as UNSIGNED)) as minAmount, max(cast(replace(dealAmount, ",","") as UNSIGNED)) as maxAmount
+from house
+group by aptCode;
+
 drop view apartment;
 create view apartment as
 select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, lng, lat
-from house;
+from house
+group by aptCode;
 
+desc apartment;
+
+select * from apartment limit 10;
+
+desc house;
+select * from house where aptCode = "11110000000006";
 
 drop view sido;
 create view sido as
@@ -163,3 +177,6 @@ create view dong as
 select left(dongCode,8) dongcode, dongName
 from dongcode
 group by left(dongCode,8);
+
+
+

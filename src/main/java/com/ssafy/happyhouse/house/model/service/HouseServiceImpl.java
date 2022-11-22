@@ -81,7 +81,6 @@ public class HouseServiceImpl implements HouseService {
 
 		for(Map<String,String> g: gugun){
 			if(!g.containsKey("gugunname")) continue;
-			System.out.println(g.get("gugunname"));
 			if(g.get("gugunname").contains(keyword)){
 				return g.get("dongcode");
 			}
