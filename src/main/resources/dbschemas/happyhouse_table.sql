@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS happyhouse.members ;
 CREATE TABLE IF NOT EXISTS happyhouse.members (
   user_id VARCHAR(16) NOT NULL,
   user_name VARCHAR(20) NOT NULL,
-  user_password VARCHAR(16) NOT NULL,
+  user_password VARCHAR(100) NOT NULL,
   email_id VARCHAR(20) NULL DEFAULT NULL,
   email_domain VARCHAR(45) NULL DEFAULT NULL,
   join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

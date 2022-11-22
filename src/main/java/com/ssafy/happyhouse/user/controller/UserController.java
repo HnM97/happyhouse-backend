@@ -78,6 +78,7 @@ public class UserController extends HttpServlet {
 		HttpStatus status = null;
 		try {
 			User loginUser = userService.login(user);
+//			System.out.println(loginUser);
 //			User loginUser = userService.searchById(map.get("userId"));
 			logger.debug("로그인  : {}", loginUser);
 			
@@ -89,7 +90,10 @@ public class UserController extends HttpServlet {
 //				resultMap.put("message", SUCCESS);
 //				status = HttpStatus.ACCEPTED;
 //			} 
+			System.out.println("user.getUserPwd() " + user.getUserPwd());
+			System.out.println("loginUser.getUserPwd() " + loginUser.getUserPwd());
 			if (loginUser != null && BCrypt.checkpw(user.getUserPwd(), loginUser.getUserPwd())) {
+//			if (loginUser != null) {
 				String accessToken = jwtService.createAccessToken("userid", loginUser.getUserId());// key, data
 				String refreshToken = jwtService.createRefreshToken("userid", loginUser.getUserId());// key, data
 				userService.saveRefreshToken(user.getUserId(), refreshToken);
@@ -168,9 +172,11 @@ public class UserController extends HttpServlet {
 			try {
 //				로그인 사용자 정보.
 				User user = userService.userInfo(userId);
+				System.out.println(user.getUserPwd());
 				resultMap.put("userInfo", user);
 				resultMap.put("message", SUCCESS);
 				status = HttpStatus.ACCEPTED;
+				logger.info("ACCEPTED");
 			} 
 			catch (Exception e) {
 				logger.error("정보조회 실패 : {}", e);
@@ -189,7 +195,7 @@ public class UserController extends HttpServlet {
 
 	@ApiOperation(value = "회원 정보 수정", notes = "회원 정보를 수정합니다.")
 	@PutMapping("/users")
-	private ResponseEntity<?> modify(User user) {
+	private ResponseEntity<?> modify(@RequestBody User user) {
 		user.setUserPwd(BCrypt.hashpw(user.getUserPwd(), BCrypt.gensalt()));
 		try {
 			userService.modifyMember(user);
@@ -217,14 +223,15 @@ public class UserController extends HttpServlet {
 	
 	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
 	@GetMapping("/logout/{userid}")
-	public ResponseEntity<?> removeToken(@PathVariable("userid") String userid) {
+	public ResponseEntity<?> removeToken(@PathVariable("userid") String userId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
-			userService.deleRefreshToken(userid);
+			userService.deleRefreshToken(userId);
 			resultMap.put("message", SUCCESS);
 			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			logger.error("로그아웃 실패 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;

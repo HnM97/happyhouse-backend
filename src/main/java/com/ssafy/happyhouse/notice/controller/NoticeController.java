@@ -164,7 +164,7 @@ public class NoticeController {
 //					noticeService.writeNotice(notice);
 //				}
 			noticeService.writeNotice(notice);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
@@ -210,16 +210,17 @@ public class NoticeController {
 
 	@ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
 	@PutMapping("/notices")
-	private ResponseEntity<?> modify(@RequestParam("articleno") int noticeNo, String subject, String content, String userId) {
-		System.out.println(noticeNo);
+//	private ResponseEntity<?> modify(@RequestParam("articleno") int noticeNo, String userId, String subject, String content) {
+	private ResponseEntity<?> modify(@RequestBody  Map<String, Object> map) {
+//		System.out.println("공지사항 수정" + map.get("articleno"));
 		try {
-			Notice notice = noticeService.getNotice(noticeNo);
+			Notice notice = noticeService.getNotice(Integer.parseInt(map.get("articleno").toString()));
 			
 			logger.debug("modify Notice : {}", notice);
 			
 			if (notice != null) {
-				notice.setSubject(subject);
-				notice.setContent(content);
+				notice.setSubject(String.valueOf(map.get("subject")));
+				notice.setContent(String.valueOf(map.get("content")));
 				noticeService.modifyNotice(notice);
 				logger.info("수정완료");
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
