@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.happyhouse.notice.model.Notice;
+import com.ssafy.happyhouse.notice.model.NoticeParameter;
 import com.ssafy.happyhouse.notice.model.service.NoticeService;
-import com.ssafy.happyhouse.util.PageNavigation;
-import com.ssafy.happyhouse.util.SizeConstant;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -100,41 +100,60 @@ public class NoticeController {
 ////		}
 //	}
 	
-	
-	// interceptor 해야됨
-	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.")
+	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.", response = List.class)
 	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
-			@ApiResponse(code = 500, message = "서버에러!!") })
+		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/notices")
-	private ResponseEntity<?> list(Map<String, String> map) {
-	
-		logger.debug("list parameter : {}", map);
-		
-		
+	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) ) throws Exception {
+		NoticeParameter noticeParameter = new NoticeParameter();
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		int maxPgNo = 1;
-		try {				
-			List<Notice> list = noticeService.listNotice(map);
-			logger.info("목록 조회 완료");
+		try {
+			logger.info("listArticle - 호출");
+			List<Notice> list = noticeService.listNotice(noticeParameter);
+			logger.debug("Notice list size : {}", list.size());
 			
-			if (list != null && !list.isEmpty()) {
-//				PageNavigation pageNavigation = noticeService.makePageNavigation(map);
-//				int cnt = noticeService.totalNoticeCount(map);
-//				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
-//				
-//				responseMap.put("list", list);
-//				responseMap.put("maxPgNo", maxPgNo);
-//				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-				return new ResponseEntity<List<Notice>>(list, HttpStatus.OK);
-			}
-			else {
-				return new ResponseEntity<Integer>(maxPgNo, HttpStatus.NO_CONTENT);
-			}
-			
-		} catch (Exception e) {
+			responseMap.put("list", list);
+			responseMap.put("message", SUCCESS);
+			return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+		}
+		catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
+//	// interceptor 해야됨
+//	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+//			@ApiResponse(code = 500, message = "서버에러!!") })
+//	@GetMapping("/notices")
+//	private ResponseEntity<?> list(Map<String, String> map) {
+//	
+//		logger.debug("list parameter : {}", map);
+//		
+//		
+//		Map<String, Object> responseMap = new HashMap<String, Object>();
+//		int maxPgNo = 1;
+//		try {				
+//			List<Notice> list = noticeService.listNotice(map);
+//			logger.info("목록 조회 완료");
+//			
+//			if (list != null && !list.isEmpty()) {
+////				PageNavigation pageNavigation = noticeService.makePageNavigation(map);
+////				int cnt = noticeService.totalNoticeCount(map);
+////				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
+////				
+////				responseMap.put("list", list);
+////				responseMap.put("maxPgNo", maxPgNo);
+////				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+//				return new ResponseEntity<List<Notice>>(list, HttpStatus.OK);
+//			}
+//			else {
+//				return new ResponseEntity<Integer>(maxPgNo, HttpStatus.NO_CONTENT);
+//			}
+//			
+//		} catch (Exception e) {
+//			return exceptionHandling(e);
+//		}
+//	}
 
 //	@GetMapping("/notices/search")
 //	private ResponseEntity<?> search() {

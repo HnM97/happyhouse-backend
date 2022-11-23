@@ -40,6 +40,7 @@ public class UserController extends HttpServlet {
 	private final Logger logger = LoggerFactory.getLogger(UserController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	private static final String UNDEFINED = "undefined";
 
 	@Autowired
 	private JwtServiceImpl jwtService;
@@ -90,8 +91,8 @@ public class UserController extends HttpServlet {
 //				resultMap.put("message", SUCCESS);
 //				status = HttpStatus.ACCEPTED;
 //			} 
-			System.out.println("user.getUserPwd() " + user.getUserPwd());
-			System.out.println("loginUser.getUserPwd() " + loginUser.getUserPwd());
+//			System.out.println("user.getUserPwd() " + user.getUserPwd());
+//			System.out.println("loginUser.getUserPwd() " + loginUser.getUserPwd());
 			if (loginUser != null && BCrypt.checkpw(user.getUserPwd(), loginUser.getUserPwd())) {
 //			if (loginUser != null) {
 				String accessToken = jwtService.createAccessToken("userid", loginUser.getUserId());// key, data
@@ -172,7 +173,7 @@ public class UserController extends HttpServlet {
 			try {
 //				로그인 사용자 정보.
 				User user = userService.userInfo(userId);
-				System.out.println(user.getUserPwd());
+//				System.out.println(user.getUserPwd());
 				resultMap.put("userInfo", user);
 				resultMap.put("message", SUCCESS);
 				status = HttpStatus.ACCEPTED;
@@ -197,11 +198,14 @@ public class UserController extends HttpServlet {
 	@PutMapping("/users")
 	private ResponseEntity<?> modify(@RequestBody User user) {
 		user.setUserPwd(BCrypt.hashpw(user.getUserPwd(), BCrypt.gensalt()));
+		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			userService.modifyMember(user);
 			logger.info("회원 정보 수정 완료");
 			User joinUser = userService.searchById(user.getUserId());
-			return new ResponseEntity<User>(joinUser, HttpStatus.OK);
+			resultMap.put("joinUser", joinUser);
+			resultMap.put("message", SUCCESS);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
@@ -209,12 +213,22 @@ public class UserController extends HttpServlet {
 	}
 
 	@ApiOperation(value = "회원 탈퇴", notes = "회원을 목록에서 삭제합니다.")
-	@DeleteMapping("/users")
-	private ResponseEntity<?> delete(String userId) {
+	@DeleteMapping("/users/{userId}")
+	private ResponseEntity<?> delete(@PathVariable String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
 		try {
-			userService.deleteMember(userId);
-			logger.info("회원 탈퇴 완료");
-			return new ResponseEntity<String>(userId, HttpStatus.OK);
+			if (!userId.equals(UNDEFINED)) {
+				userService.deleteMember(userId);
+				logger.info("회원 탈퇴 완료");
+				resultMap.put("userId", userId);
+				resultMap.put("message", SUCCESS);
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);				
+			}
+			else {
+				logger.info("회원 탈퇴 실패");
+				resultMap.put("message", FAIL);
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);	
+			}
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
