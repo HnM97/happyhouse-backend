@@ -149,26 +149,6 @@ select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, ln
 from house
 group by aptCode;
 
-
-drop view apartment;
-create view apartment as
-select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, lng, lat
-from house
-group by aptCode;
-
-
-
-select * from house;
-desc apartment;
-
-select count(aptCode) from house;
-select count(aptCode) from apartment;
-
-select * from apartment limit 10;
-
-desc house;
-select * from house where aptCode = "11110000000006";
-
 drop view sido;
 create view sido as
 select left(dongCode,2) dongcode, sidoName
@@ -184,8 +164,8 @@ select left(dongCode,5) dongcode, gugunName
 drop view dong;
 create view dong as
 select left(dongCode,8) dongcode, dongName
-        from dongcode
-        group by left(dongCode,8);
+from dongcode
+group by left(dongCode,8);
 
 
 

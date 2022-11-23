@@ -17,5 +17,9 @@ public interface HouseService {
 	public List<Map<String, String>> getSiDoList() throws SQLException;
 	public List<Map<String, String>> getGuGunList(String siDoDongCode) throws SQLException;
 	public List<Map<String, String>> getDongList(String guGunDongCode) throws SQLException;
-	
+	public String getRegFromKeyword(String keyword) throws SQLException;
+
+	public List<Map<String, String>> getAllGuGunList() throws SQLException;
+
+	public List<Map<String, String>> getAllDongList() throws SQLException;
 }
