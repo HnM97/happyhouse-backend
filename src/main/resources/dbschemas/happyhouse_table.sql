@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS happyhouse.members ;
 CREATE TABLE IF NOT EXISTS happyhouse.members (
     user_id VARCHAR(16) NOT NULL,
     user_name VARCHAR(20) NOT NULL,
-    user_password VARCHAR(100) NOT NULL,membersmembers
+    user_password VARCHAR(100) NOT NULL,
     email_id VARCHAR(20) NULL DEFAULT NULL,
     email_domain VARCHAR(45) NULL DEFAULT NULL,
     join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS happyhouse.members (
     COLLATE = utf8mb4_0900_ai_ci;
 
 alter table happyhouse.members modify user_password varchar(100);
+alter table members add token varchar(1000) null default null;
 
 insert into happyhouse.members (user_id, user_name, user_password, email_id, email_domain, join_date)
 values     ('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now()),
