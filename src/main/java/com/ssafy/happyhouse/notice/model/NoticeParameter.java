@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class NoticeParameter {
 
 	@ApiModelProperty(value = "현재 페이지 번호")
-	private int pg;
+	private int pgNo;
 	@ApiModelProperty(value = "페이지당 글갯수")
 	private int spp;
 	@ApiModelProperty(value = "페이지의 시작 글번호")
@@ -18,17 +18,17 @@ public class NoticeParameter {
 	private String word;
 	
 	public NoticeParameter() {
-		pg = 1;
-		spp = 20;
+		pgNo = 1;
+		spp = 15;
 	}
 
-	public int getPg() {
-		return pg;
+	public int getPgNo() {
+		return pgNo;
 	}
 
-	public void setPg(int pg) {
-		pg = pg == 0 ? 1 : pg;
-		this.pg = pg;
+	public void setPgNo(int pgNo) {
+		pgNo = pgNo == 0 ? 1 : pgNo;
+		this.pgNo = pgNo;
 	}
 
 	public int getSpp() {
@@ -65,7 +65,7 @@ public class NoticeParameter {
 
 	@Override
 	public String toString() {
-		return "NoticeParameter [pg=" + pg + ", spp=" + spp + ", start=" + start + ", key=" + key + ", word=" + word
+		return "NoticeParameter [pgNo=" + pgNo + ", spp=" + spp + ", start=" + start + ", key=" + key + ", word=" + word
 				+ "]";
 	}
 

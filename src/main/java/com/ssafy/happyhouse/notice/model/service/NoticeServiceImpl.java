@@ -1,17 +1,16 @@
 package com.ssafy.happyhouse.notice.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.happyhouse.notice.model.Notice;
 import com.ssafy.happyhouse.notice.model.NoticeParameter;
 import com.ssafy.happyhouse.notice.model.dao.NoticeDao;
-import com.ssafy.happyhouse.util.PageNavigation;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {
@@ -30,8 +29,11 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public List<Notice> listNotice(NoticeParameter noticeParameter) throws Exception {
-		int start = noticeParameter.getPg() == 0 ? 0 : (noticeParameter.getPg() - 1) * noticeParameter.getSpp();
+		int start = noticeParameter.getPgNo() == 0 ? 0 : (noticeParameter.getPgNo() - 1) * noticeParameter.getSpp();
 		noticeParameter.setStart(start);
+		
+		
+		
 		return noticeDao.listNotice(noticeParameter);
 	}
 	
@@ -79,29 +81,70 @@ public class NoticeServiceImpl implements NoticeService {
 		noticeDao.deleteNotice(noticeNo);
 	}
 	
+	
+	
 	@Override
-	public PageNavigation makePageNavigation(NoticeParameter noticeParameter) throws Exception {
+	public Map<String, Object> makePageNavigation(NoticeParameter noticeParameter) throws Exception {
 		int naviSize = 5;
 		
-		PageNavigation pageNavigation = new PageNavigation();
-		pageNavigation.setCurrentPage(noticeParameter.getPg());
-		pageNavigation.setNaviSize(naviSize);
+//		PageNavigation pageNavigation = new PageNavigation();
+//		pageNavigation.setCurrentPage(noticeParameter.getPgNo());
+//		pageNavigation.setNaviSize(naviSize);
 		
 		int totalCount = noticeDao.getTotalCount(noticeParameter);//총글갯수  269
-		pageNavigation.setTotalCount(totalCount);  
+//		pageNavigation.setTotalCount(totalCount);  
 		
 		int totalPageCount = (totalCount - 1) / noticeParameter.getSpp() + 1;//27
-		pageNavigation.setTotalPageCount(totalPageCount);
+//		pageNavigation.setTotalPageCount(totalPageCount);
 		
-		boolean startRange = noticeParameter.getPg() <= naviSize;
-		pageNavigation.setStartRange(startRange);
+		boolean startRange = noticeParameter.getPgNo() <= naviSize;
+//		pageNavigation.setStartRange(startRange);
 		
-		boolean endRange = (totalPageCount - 1) / naviSize * naviSize < noticeParameter.getPg();
-		pageNavigation.setEndRange(endRange);
+		boolean endRange = (totalPageCount - 1) / naviSize * naviSize < noticeParameter.getPgNo();
+//		pageNavigation.setEndRange(endRange);
 		
-		pageNavigation.makeNavigator();
-		return pageNavigation;
+		int startPage = (noticeParameter.getPgNo() - 1) / naviSize * naviSize + 1;
+		int endPage = startPage + naviSize - 1;
+		if(totalPageCount < endPage)
+			endPage = totalPageCount;
+//		pageNavigation.makeNavigator();
+		
+		Map<String, Object> pageNavigationMap = new HashMap<String, Object>();
+		
+		pageNavigationMap.put("naviSize", naviSize);
+		pageNavigationMap.put("totalCount", totalCount);
+		pageNavigationMap.put("totalPageCount", totalPageCount);
+		pageNavigationMap.put("startRange", startRange);
+		pageNavigationMap.put("endRange", endRange);
+		pageNavigationMap.put("startPage", startPage);
+		pageNavigationMap.put("endPage", endPage);
+		
+		return pageNavigationMap;
 	}
+	
+//	@Override
+//	public PageNavigation makePageNavigation(NoticeParameter noticeParameter) throws Exception {
+//		int naviSize = 5;
+//		
+//		PageNavigation pageNavigation = new PageNavigation();
+//		pageNavigation.setCurrentPage(noticeParameter.getPgNo());
+//		pageNavigation.setNaviSize(naviSize);
+//		
+//		int totalCount = noticeDao.getTotalCount(noticeParameter);//총글갯수  269
+//		pageNavigation.setTotalCount(totalCount);  
+//		
+//		int totalPageCount = (totalCount - 1) / noticeParameter.getSpp() + 1;//27
+//		pageNavigation.setTotalPageCount(totalPageCount);
+//		
+//		boolean startRange = noticeParameter.getPgNo() <= naviSize;
+//		pageNavigation.setStartRange(startRange);
+//		
+//		boolean endRange = (totalPageCount - 1) / naviSize * naviSize < noticeParameter.getPgNo();
+//		pageNavigation.setEndRange(endRange);
+//		
+//		pageNavigation.makeNavigator();
+//		return pageNavigation;
+//	}
 
 
 //	public static class QuickSorter {

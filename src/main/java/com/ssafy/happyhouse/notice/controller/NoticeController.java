@@ -39,6 +39,9 @@ public class NoticeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(NoticeController.class);
 	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	private static final String UNDEFINED = "undefined";
+	
 	
 	private NoticeService noticeService;
 	private Map<String, String> map;
@@ -104,9 +107,16 @@ public class NoticeController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
 		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/notices")
-	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) ) throws Exception {
-		NoticeParameter noticeParameter = new NoticeParameter();
-		Map<String, Object> responseMap = new HashMap<String, Object>();
+	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) NoticeParameter noticeParameter) throws Exception {
+		
+		Map<String, Object> responseMap = noticeService.makePageNavigation(noticeParameter);
+		
+//		NoticeParameter noticeParameter = new NoticeParameter();
+//		noticeParameter.setPgNo(pgNo);
+//		noticeParameter.setKey(key);
+//		noticeParameter.setWord(word);
+//		System.out.println(noticeParameter);
+		
 		try {
 			logger.info("listArticle - 호출");
 			List<Notice> list = noticeService.listNotice(noticeParameter);
@@ -171,10 +181,8 @@ public class NoticeController {
 	@ApiOperation(value = "공지사항 작성", notes = "공지사항을 등록합니다.")
 	@PostMapping("/notices")
 	private ResponseEntity<?> write(@RequestBody Notice notice) {
-		System.out.println(notice);
 		logger.debug("write Notice : {}", notice);
-		
-		try {				
+				try {				
 //				Notice notice = new Notice();
 //				for(int i=1;i<=200;i++) {
 //					notice.setUserId(user.getUserId());
@@ -182,8 +190,13 @@ public class NoticeController {
 //					notice.setContent(request.getParameter("content")+i);
 //					noticeService.writeNotice(notice);
 //				}
-			noticeService.writeNotice(notice);
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			if (notice.getUserId() != null && notice.getSubject() != null && notice.getContent() != null) {
+				noticeService.writeNotice(notice);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);				
+			}
+			else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+			}
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
@@ -256,7 +269,7 @@ public class NoticeController {
 
 	@ApiOperation(value = "공지사항 삭제", notes = "공지사항을 삭제합니다.")
 	@DeleteMapping("/notices")
-	private ResponseEntity<?> delete(@RequestParam("articleno") int noticeNo, int pgno) {
+	private ResponseEntity<?> delete(@RequestParam("articleno") int noticeNo, int pgNo) {
 		
 		logger.debug("delete noticeNo : {}", noticeNo);
 		
