@@ -94,4 +94,15 @@ public class HouseServiceImpl implements HouseService {
 		}
 		return "none";
 	}
+
+	@Override
+	public String getRoadAddress(String regCode) throws SQLException {
+		String sidoName = "";
+		String gugunName = "";
+
+		sidoName = houseDao.searchSidoName(regCode);
+		gugunName = houseDao.searchGugunName(regCode);
+
+		return sidoName + " " + gugunName;
+	}
 }

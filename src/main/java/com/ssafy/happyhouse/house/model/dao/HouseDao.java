@@ -26,4 +26,7 @@ public interface HouseDao {
 	public List<Map<String, String>> getAllGuGunList() throws SQLException;
 
 	public List<Map<String, String>> getAllDongList() throws SQLException;
+
+	public String searchSidoName(String regCode) throws SQLException;
+	public String searchGugunName(String regCode) throws SQLException;
 }

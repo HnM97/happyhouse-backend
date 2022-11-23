@@ -22,4 +22,6 @@ public interface HouseService {
 	public List<Map<String, String>> getAllGuGunList() throws SQLException;
 
 	public List<Map<String, String>> getAllDongList() throws SQLException;
+
+	public String getRoadAddress(String regCode) throws SQLException;
 }

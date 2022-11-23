@@ -13,6 +13,8 @@
 		<result column="jibun" property="jibun"/>
 		<result column="lng" property="lng"/>
 		<result column="lat" property="lat"/>
+		<result column="minAmount" property="minAmount"/>
+		<result column="maxAmount" property="maxAmount"/>
 	</resultMap>
 	
 	
@@ -52,7 +54,7 @@
 	
 	
 	<select id="searchByCondition" parameterType="java.util.HashMap" resultType="house">
-		select distinct aptCode, apartmentName, buildyear, roadName, jibun, lng, lat
+		select distinct aptCode, apartmentName, buildyear, roadName, jibun, lng, lat, minAmount, maxAmount
 		from apartment
 		<where>
 			dongCode like CONCAT(#{dongCode},'%')
@@ -78,6 +80,18 @@
 	<select id="getAllDongList" resultType="map">
 		select dongcode, dongname
 		from dong;
+	</select>
+
+	<select id="searchSidoName" parameterType="String" resultType="String">
+		select sidoName
+		from sido
+		where dongCode = left(#{regCode},2)
+	</select>
+
+	<select id="searchGugunName" parameterType="String" resultType="String">
+		select gugunName
+		from gugun
+		where dongCode = left(#{regCode},5)
 	</select>
 
 </mapper>

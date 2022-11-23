@@ -166,5 +166,18 @@ public class HouseController{
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@ApiOperation(value = "도로명 주소(구/군까지) 반환", notes = "아파트 코드에 따른 도로명 주소(구/군까지) 반환")
+	@ApiResponses({ @ApiResponse(code = 200, message = "도로명 주소 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+			@ApiResponse(code = 500, message = "서버에러!!") })
+	@GetMapping("/address")
+	private ResponseEntity<?> getRoadAddress(String regCode){
+		logger.info("get road address");
+		try{
+			String roadAddress = houseService.getRoadAddress(regCode);
+			return new ResponseEntity<>(roadAddress, HttpStatus.OK);
+		} catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 }
