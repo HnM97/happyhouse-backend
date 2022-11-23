@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,7 @@ import io.swagger.annotations.ApiResponses;
 public class NoticeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(NoticeController.class);
+	private static final String SUCCESS = "success";
 	
 	private NoticeService noticeService;
 	private Map<String, String> map;
@@ -149,8 +151,8 @@ public class NoticeController {
 	
 	@ApiOperation(value = "공지사항 작성", notes = "공지사항을 등록합니다.")
 	@PostMapping("/notices")
-	private ResponseEntity<?> write(Notice notice) {
-		
+	private ResponseEntity<?> write(@RequestBody Notice notice) {
+		System.out.println(notice);
 		logger.debug("write Notice : {}", notice);
 		
 		try {				
@@ -162,7 +164,7 @@ public class NoticeController {
 //					noticeService.writeNotice(notice);
 //				}
 			noticeService.writeNotice(notice);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
@@ -208,18 +210,20 @@ public class NoticeController {
 
 	@ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
 	@PutMapping("/notices")
-	private ResponseEntity<?> modify(@RequestParam("articleno") int noticeNo, String subject, String content) {
+//	private ResponseEntity<?> modify(@RequestParam("articleno") int noticeNo, String userId, String subject, String content) {
+	private ResponseEntity<?> modify(@RequestBody  Map<String, Object> map) {
+//		System.out.println("공지사항 수정" + map.get("articleno"));
 		try {
-			Notice notice = noticeService.getNotice(noticeNo);
+			Notice notice = noticeService.getNotice(Integer.parseInt(map.get("articleno").toString()));
 			
 			logger.debug("modify Notice : {}", notice);
 			
 			if (notice != null) {
-				notice.setSubject(subject);
-				notice.setContent(content);
+				notice.setSubject(String.valueOf(map.get("subject")));
+				notice.setContent(String.valueOf(map.get("content")));
 				noticeService.modifyNotice(notice);
 				logger.info("수정완료");
-				return new ResponseEntity<Void>(HttpStatus.OK);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 			else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
@@ -240,7 +244,7 @@ public class NoticeController {
 		try {
 			noticeService.deleteNotice(noticeNo);
 			logger.info("삭제완료");
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);

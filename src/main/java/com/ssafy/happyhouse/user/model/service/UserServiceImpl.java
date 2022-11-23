@@ -1,6 +1,7 @@
 package com.ssafy.happyhouse.user.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,39 @@ public class UserServiceImpl implements UserService {
 	public User searchById(String userId) throws SQLException {
 		return userDao.searchById(userId);
 		
+	}
+	
+	@Override
+	public User login(User user) throws Exception {
+		if (user.getUserId() == null || user.getUserPwd() == null)
+			return null;
+		return userDao.login(user);
+	}
+
+	@Override
+	public User userInfo(String userid) throws Exception {
+		return userDao.userInfo(userid);
+	}
+
+	@Override
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", refreshToken);
+		userDao.saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String userid) throws Exception {
+		return userDao.getRefreshToken(userid);
+	}
+
+	@Override
+	public void deleRefreshToken(String userid) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", null);
+		userDao.deleteRefreshToken(map);
 	}
 
 }

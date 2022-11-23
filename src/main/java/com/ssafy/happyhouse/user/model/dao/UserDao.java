@@ -16,4 +16,10 @@ public interface UserDao {
 	void modifyMember(User user) throws SQLException;
 	void deleteMember(String userId) throws SQLException;
 	User searchById(String userId) throws SQLException;
+	
+	public User login(User user) throws SQLException;
+	public User userInfo(String userid) throws SQLException;
+	public void saveRefreshToken(Map<String, String> map) throws SQLException;
+	public Object getRefreshToken(String userid) throws SQLException;
+	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
 }

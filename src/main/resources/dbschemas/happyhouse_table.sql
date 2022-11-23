@@ -16,18 +16,19 @@ DROP TABLE IF EXISTS happyhouse.members ;
 CREATE TABLE IF NOT EXISTS happyhouse.members (
   user_id VARCHAR(16) NOT NULL,
   user_name VARCHAR(20) NOT NULL,
-  user_password VARCHAR(16) NOT NULL,
+  user_password VARCHAR(100) NOT NULL,
   email_id VARCHAR(20) NULL DEFAULT NULL,
   email_domain VARCHAR(45) NULL DEFAULT NULL,
   join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  token VARCHAR(1000) NULL DEFAULT NULL,
   PRIMARY KEY (user_id))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-insert into happyhouse.members (user_id, user_name, user_password, email_id, email_domain, join_date)
-values     ('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now()), 
-        ('admin', '관리자', '1234', 'admin', 'google.com', now());
+insert into happyhouse.members (user_id, user_name, user_password, email_id, email_domain, join_date, token)
+values     ('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now(), null), 
+        ('admin', '관리자', '1234', 'admin', 'google.com', now(), null);
 
 commit;
 
@@ -103,7 +104,7 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-drop table interest;
+DROP TABLE IF EXISTS interest;
 CREATE TABLE IF NOT EXISTS happyhouse.interest (
   user_id VARCHAR(16) NOT NULL,
   dongcode VARCHAR(10) NOT NULL,
@@ -115,7 +116,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 alter table houseinfo add hit int default 0;
 
-drop table if exists bookmark;
+DROP TABLE IF EXISTS bookmark;
 create table bookmark (
 	user_id varchar(16),
     aptCode  bigint,
