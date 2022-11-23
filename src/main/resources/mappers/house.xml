@@ -53,9 +53,9 @@
 	
 	<select id="searchByCondition" parameterType="java.util.HashMap" resultType="house">
 		select distinct aptCode, apartmentName, buildyear, roadName, jibun, lng, lat
-		from house
+		from apartment
 		<where>
-			dongCode = #{dongCode}
+			dongCode like CONCAT(#{dongCode},'%')
 			<if test ="buildYearStart != null">
 				and buildyear &gt;= #{buildYearStart}
 			</if>
@@ -69,6 +69,15 @@
 				and dealamount &lt;= #{amountEnd}
 			</if>
 		</where>
+	</select>
+	<select id="getAllGuGunList" resultType="map">
+		select dongcode, gugunname
+		from gugun;
+	</select>
+
+	<select id="getAllDongList" resultType="map">
+		select dongcode, dongname
+		from dong;
 	</select>
 
 </mapper>

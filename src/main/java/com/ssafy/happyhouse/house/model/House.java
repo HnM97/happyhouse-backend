@@ -17,24 +17,13 @@ public class House {
 	private double lng;
 	private double lat;
 
-	
+	private int minAmout;
+	private int maxAmount;
 
-
-	@Override
-	public String toString() {
-		return "House [aptCode=" + aptCode + ", dongCode=" + dongCode + ", apartmentName=" + apartmentName
-				+ ", buildYear=" + buildYear + ", dealAmount=" + dealAmount + ", area=" + area + ", dealYear="
-				+ dealYear + ", dealMonth=" + dealMonth + ", dealDay=" + dealDay + ", roadName=" + roadName + ", jibun="
-				+ jibun + ", lng=" + lng + ", lat=" + lat + "]";
+	public House() {
 	}
 
-
-
-
-	public House(String aptCode, String dongCode, String apartmentName, int buildYear, String dealAmount,
-			String area, int dealYear, int dealMonth, int dealDay, String roadName, String jibun, double lng,
-			double lat) {
-		super();
+	public House(String aptCode, String dongCode, String apartmentName, int buildYear, String dealAmount, String area, int dealYear, int dealMonth, int dealDay, String roadName, String jibun, double lng, double lat, int minAmout, int maxAmount) {
 		this.aptCode = aptCode;
 		this.dongCode = dongCode;
 		this.apartmentName = apartmentName;
@@ -48,13 +37,17 @@ public class House {
 		this.jibun = jibun;
 		this.lng = lng;
 		this.lat = lat;
+		this.minAmout = minAmout;
+		this.maxAmount = maxAmount;
 	}
 
-	public House() {
-		super();
-		// TODO Auto-generated constructor stub
+	public int getMinAmout() {
+		return minAmout;
 	}
 
+	public void setMinAmout(int minAmout) {
+		this.minAmout = minAmout;
+	}
 
 	public String getAptCode() {
 		return aptCode;
