@@ -23,12 +23,14 @@
 		from house
 		where aptCode = #{aptCode}
 		order by dealyear desc, dealmonth desc, dealday desc
+
 	</select>
 	
 	<select id="selectDong" parameterType="string" resultMap="house">
 		select aptCode, apartmentName, buildyear, roadName, jibun, lng, lat
 		from apartment
-		where left(dongCode,8) = #{dongCode}	
+		where left(dongCode,8) = #{dongCode}
+
 	</select>
 
 		<select id="getSiDoList" resultType="map">

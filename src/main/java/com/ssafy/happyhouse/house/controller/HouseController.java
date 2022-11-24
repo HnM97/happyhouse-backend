@@ -39,9 +39,10 @@ public class HouseController{
 		@ApiResponse(code = 204, message = "결과 없음!!"), 
 		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/view")
-	private ResponseEntity<?> view(String aptCode) {
+	private ResponseEntity<?> view(@RequestParam String aptCode) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		logger.info("view called!!!");
+		logger.info(aptCode);
 		try {
 			List<House> aptInfos = houseService.selectApt(aptCode);
 
