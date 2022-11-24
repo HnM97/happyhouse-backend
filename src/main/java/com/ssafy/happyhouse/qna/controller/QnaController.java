@@ -1,12 +1,8 @@
 package com.ssafy.happyhouse.qna.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.happyhouse.qna.model.Memo;
-import com.ssafy.happyhouse.qna.model.Qna;
-import com.ssafy.happyhouse.qna.model.service.QnaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +14,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.happyhouse.util.PageNavigation;
-import com.ssafy.happyhouse.util.SizeConstant;
+import com.ssafy.happyhouse.notice.model.Notice;
+import com.ssafy.happyhouse.qna.model.Memo;
+import com.ssafy.happyhouse.qna.model.Qna;
+import com.ssafy.happyhouse.qna.model.QnaParameter;
+import com.ssafy.happyhouse.qna.model.service.QnaService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -38,7 +39,9 @@ import io.swagger.annotations.ApiResponses;
 public class QnaController {
 
     private final Logger logger = LoggerFactory.getLogger(com.ssafy.happyhouse.qna.controller.QnaController.class);
-
+    private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+    
     private QnaService qnaService;
     private Map<String, String> map;
 
@@ -48,59 +51,33 @@ public class QnaController {
         this.qnaService = qnaService;
     }
 
-
-
-    // interceptor 해야됨
     @ApiOperation(value = "Qna 목록", notes = "Qna의 전체 목록을 반환해 줍니다.")
     @ApiResponses({ @ApiResponse(code = 200, message = "Qna 목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
-            @ApiResponse(code = 500, message = "서버에러!!") })
+        @ApiResponse(code = 500, message = "서버에러!!") })
     @GetMapping("/qnas")
-    private ResponseEntity<?> list(Map<String, String> map) {
+	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) QnaParameter qnaParameter) throws Exception {
+		
+		Map<String, Object> responseMap = qnaService.makePageNavigation(qnaParameter);
+		
+		try {
+			logger.info("listArticle - 호출");
+			List<Qna> list = qnaService.listQna(qnaParameter);
+			logger.debug("Qna list size : {}", list.size());
+			
+			responseMap.put("list", list);
+			responseMap.put("message", SUCCESS);
+			return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
-        logger.debug("list parameter : {}", map);
 
-
-        Map<String, Object> responseMap = new HashMap<String, Object>();
-        int maxPgNo = 1;
-        try {
-            List<Qna> list = qnaService.listQna(map);
-            logger.info("목록 조회 완료");
-
-            if (list != null && !list.isEmpty()) {
-//				PageNavigation pageNavigation = qnaService.makePageNavigation(map);
-//				int cnt = qnaService.totalNoticeCount(map);
-//				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
-//
-//				responseMap.put("list", list);
-//				responseMap.put("maxPgNo", maxPgNo);
-//				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-                return new ResponseEntity<List<Qna>>(list, HttpStatus.OK);
-            }
-            else {
-                return new ResponseEntity<Integer>(maxPgNo, HttpStatus.NO_CONTENT);
-            }
-
-        } catch (Exception e) {
-            return exceptionHandling(e);
-        }
-    }
-
-//	@GetMapping("/qnas/search")
-//	private ResponseEntity<?> search() {
-//
-//		try {
-//			Notice qna = qnaService.search();
-//
-//			return new ResponseEntity<Notice>(qna, HttpStatus.OK);
-//		}
-//		catch (Exception e) {
-//			return exceptionHandling(e);
-//		}
-//	}
 
     @ApiOperation(value = "Qna 작성", notes = "Qna 등록합니다.")
     @PostMapping("/qnas")
-    private ResponseEntity<?> write(Qna qna) {
+    private ResponseEntity<?> write(@RequestBody Qna qna) {
 
         logger.debug("write Qna : {}", qna);
 
@@ -111,9 +88,15 @@ public class QnaController {
 //					qna.setSubject(request.getParameter("subject")+i);
 //					qna.setContent(request.getParameter("content")+i);
 //					qnaService.writeNotice(qna);
-//				}
-            qnaService.writeQna(qna);
-            return new ResponseEntity<Void>(HttpStatus.OK);
+//				}            qnaService.writeQna(qna);
+        	if (qna.getUserId() != null && qna.getSubject() != null && qna.getContent() != null) {
+        		qnaService.writeQna(qna);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);				
+			}
+			else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+			}
+
         }
         catch (Exception e) {
             return exceptionHandling(e);
@@ -141,18 +124,23 @@ public class QnaController {
 
     @ApiOperation(value = "Qna 수정", notes = "Qna를 수정합니다.")
     @PutMapping("/qnas")
-    private ResponseEntity<?> modify(@RequestParam("articleno") int qnaNo, String subject, String content) {
+    private ResponseEntity<?> modify(@RequestBody  Map<String, Object> map) {
+    	System.out.println(map.get("articleno"));
+    	System.out.println(map.get("subject"));
+    	System.out.println(map.get("content"));
         try {
+        	int qnaNo = Integer.parseInt(map.get("articleno").toString());
             Qna qna = qnaService.getQna(qnaNo);
 
             logger.debug("modify Qna : {}", qna);
 
             if (qna != null) {
-                qna.setSubject(subject);
-                qna.setContent(content);
+                qna.setSubject(String.valueOf(map.get("subject")));
+                qna.setContent(String.valueOf(map.get("content")));
                 qnaService.modifyQna(qna);
+                System.out.println(qnaService.getQna(qnaNo));
                 logger.info("수정완료");
-                return new ResponseEntity<Void>(HttpStatus.OK);
+                return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
             }
             else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
@@ -166,7 +154,7 @@ public class QnaController {
 
     @ApiOperation(value = "Qna 삭제", notes = "Qna를 삭제합니다.")
     @DeleteMapping("/qnas")
-    private ResponseEntity<?> delete(@RequestParam("articleno") int qnaNo, int pgno) {
+    private ResponseEntity<?> delete(@RequestParam("articleno") int qnaNo, int pgNo) {
 
         logger.debug("delete qnaNo : {}", qnaNo);
 
@@ -203,7 +191,7 @@ public class QnaController {
     }
     @ApiOperation(value = "Memo 삭제", notes = "Qna의 특정 Memo를 삭제합니다.")
     @DeleteMapping("/qnas/{articleno}/{memoNo}")
-    private ResponseEntity<?> deleteMemo(@RequestParam("articleno") int qnaNo, @RequestParam("memono") int memoNo, int pgno) {
+    private ResponseEntity<?> deleteMemo(@RequestParam("articleno") int qnaNo, @RequestParam("memono") int memoNo, int pgNo) {
 
         logger.debug("delete memoNo : {}", memoNo);
 

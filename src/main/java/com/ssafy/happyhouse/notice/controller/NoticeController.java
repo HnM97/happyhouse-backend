@@ -1,6 +1,5 @@
 package com.ssafy.happyhouse.notice.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,57 +51,6 @@ public class NoticeController {
 		this.noticeService = noticeService;
 	}
 
-//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String act = request.getParameter("act");
-//		
-//		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
-//		String option = request.getParameter("option"); option = option==null?"latest":option;
-//		String key = ParameterCheck.nullToBlank(request.getParameter("key"));
-//		String word = ParameterCheck.nullToBlank(request.getParameter("word"));
-//
-//		String queryString = "?option="+option+"&pgno=" + pgNo + "&key=" + key + "&word=" + word;
-//		
-//		int spp = SizeConstant.SIZE_PER_PAGE;
-//		int startPage = (pgNo/spp)*spp + 1;
-//		request.setAttribute("startpage", startPage);
-//		request.setAttribute("option", option);
-//		
-//		map = new HashMap<>();
-//		map.put("option", option);
-//		map.put("pgno", pgNo + "");
-//		map.put("key", key);
-//		map.put("word", word);
-//		
-////		String path = "/index.jsp";
-////		if("list".equals(act)) {
-////			path = list(request, response);
-////			forward(request, response, path + queryString);
-////		} else if("mvwrite".equals(act)) {
-////			path = "/notice/write.jsp";
-////			redirect(request, response, path);
-////		} else if("write".equals(act)) {
-////			path = write(request, response);
-////			forward(request, response, path);
-////		} else if("view".equals(act)) {
-////			path = view(request, response);
-////			forward(request, response, path + queryString);
-////		} else if("mvmodify".equals(act)) {
-////			path = mvModify(request, response);
-////			forward(request, response, path);
-////		} else if("modify".equals(act)) {
-////			path = modify(request, response);
-////			forward(request, response, path);
-////		} else if("delete".equals(act)) {
-////			path = delete(request, response);
-////			redirect(request, response, path);
-////		} else if("search".equals(act)) { // 검색 기능 구현
-////			path = search(request, response);
-////			forward(request, response, path);
-////		} else {
-////			redirect(request, response,path);
-////		}
-//	}
-	
 	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.", response = List.class)
 	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
 		@ApiResponse(code = 500, message = "서버에러!!") })
@@ -110,12 +58,6 @@ public class NoticeController {
 	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) NoticeParameter noticeParameter) throws Exception {
 		
 		Map<String, Object> responseMap = noticeService.makePageNavigation(noticeParameter);
-		
-//		NoticeParameter noticeParameter = new NoticeParameter();
-//		noticeParameter.setPgNo(pgNo);
-//		noticeParameter.setKey(key);
-//		noticeParameter.setWord(word);
-//		System.out.println(noticeParameter);
 		
 		try {
 			logger.info("listArticle - 호출");
@@ -181,8 +123,10 @@ public class NoticeController {
 	@ApiOperation(value = "공지사항 작성", notes = "공지사항을 등록합니다.")
 	@PostMapping("/notices")
 	private ResponseEntity<?> write(@RequestBody Notice notice) {
+		
 		logger.debug("write Notice : {}", notice);
-				try {				
+		
+		try {				
 //				Notice notice = new Notice();
 //				for(int i=1;i<=200;i++) {
 //					notice.setUserId(user.getUserId());
@@ -220,25 +164,6 @@ public class NoticeController {
 			return exceptionHandling(e);
 		}
 	}
-
-//	private String mvModify(HttpServletRequest request, HttpServletResponse response) {
-//		HttpSession session = request.getSession();
-//		User user = (User) session.getAttribute("userinfo");
-//		if(user != null) {
-//			try {
-//				int noticeNo = Integer.parseInt(request.getParameter("articleno"));
-//				Notice notice = noticeService.getNotice(noticeNo);				
-//				request.setAttribute("article",notice);
-//				return "/notice/modify.jsp";
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				request.setAttribute("msg", "공지사항 불러오는 중 에러발생!!!");
-//				return "/error/error.jsp";
-//			}
-//		} else {
-//			return "/user/login.jsp";
-//		}
-//	}
 
 	@ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
 	@PutMapping("/notices")

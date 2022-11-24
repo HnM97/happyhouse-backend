@@ -31,9 +31,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public List<Notice> listNotice(NoticeParameter noticeParameter) throws Exception {
 		int start = noticeParameter.getPgNo() == 0 ? 0 : (noticeParameter.getPgNo() - 1) * noticeParameter.getSpp();
 		noticeParameter.setStart(start);
-		
-		
-		
+
 		return noticeDao.listNotice(noticeParameter);
 	}
 	
@@ -109,9 +107,13 @@ public class NoticeServiceImpl implements NoticeService {
 			endPage = totalPageCount;
 //		pageNavigation.makeNavigator();
 		
+		int startArticleNo = noticeParameter.getStart();
+		int currentPage = noticeParameter.getPgNo();
+		
 		Map<String, Object> pageNavigationMap = new HashMap<String, Object>();
 		
 		pageNavigationMap.put("naviSize", naviSize);
+		pageNavigationMap.put("currentPage", currentPage);
 		pageNavigationMap.put("totalCount", totalCount);
 		pageNavigationMap.put("totalPageCount", totalPageCount);
 		pageNavigationMap.put("startRange", startRange);
