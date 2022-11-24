@@ -1,5 +1,6 @@
 package com.ssafy.happyhouse.qna.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -169,22 +170,21 @@ public class QnaController {
     @ApiOperation(value = "Memo 조회", notes = "특정 Qna의 Memo들을 조회합니다.")
     @GetMapping("/qnas/{articleno}/memos")
     private ResponseEntity<?> listMemo(@PathVariable("articleno") int qnaNo){
-        logger.debug("list Memo of qnaNo : {}", qnaNo);
+    	
+    	Map<String, Object> responseMap = new HashMap<String, Object>();
+    	
         try{
+        	logger.info("QnA memo list - 호출");
             List<Memo> list = qnaService.listMemo(qnaNo);
             if (list != null && !list.isEmpty()) {
-//				PageNavigation pageNavigation = qnaService.makePageNavigation(map);
-//				int cnt = qnaService.totalNoticeCount(map);
-//				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
-//
-//				responseMap.put("list", list);
-//				responseMap.put("maxPgNo", maxPgNo);
-//				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-                return new ResponseEntity<List<Memo>>(list, HttpStatus.OK);
+            	responseMap.put("list", list);
+    			responseMap.put("message", SUCCESS);
+                return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
             }
             else {
                 return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
             }
+            
         } catch (Exception e){
             e.printStackTrace();
             return exceptionHandling(e);
