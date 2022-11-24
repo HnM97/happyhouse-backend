@@ -132,7 +132,7 @@ drop view bookmarkinfo;
 create view bookmarkinfo as
 select bm.user_id as user_id, bm.aptCode as aptCode, bm.dongcode as dongCode, hi.apartmentName as apartmentname, hi.buildyear as buildYear, hi.roadName as roadName, hi.jibun as jibun, hi.lng as lng, hi.lat as lat, min(cast(replace(hi.dealAmount, ",","") as UNSIGNED)) as minAmount, max(cast(replace(hi.dealAmount, ",","") as UNSIGNED)) as maxAmount
 from bookmark as bm, house as hi
-where bm.aptCode = hi.aptCode and user_id = "aaa"
+where bm.aptCode = hi.aptCode
 group by bm.aptCode;
 
 
