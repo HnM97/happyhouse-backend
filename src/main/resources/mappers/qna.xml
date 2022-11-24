@@ -21,16 +21,43 @@
         <result column="memo_time" property="memoTime"/>
     </resultMap>
 
-    <sql id="search">
-        <if test="word != null and word != ''">
-            <if test="key == 'subject'">
-                and subject like concat('%', #{word}, '%')
-            </if>
-            <if test="key != 'subject'">
-                and ${key} = #{word}
-            </if>
-        </if>
-    </sql>
+	<select id="listQna" parameterType="map" resultMap="qna">
+		select article_no, user_id, subject, content, hit, 
+				case when date_format(register_time, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(register_time, '%H:%i:%s')
+				else date_format(register_time, '%y.%m.%d')
+				end register_time 
+		from qna
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+		order by article_no desc
+		limit #{start}, #{spp}
+	</select>
+
+<!--     <sql id="search"> -->
+<!--         <if test="word != null and word != ''"> -->
+<!--             <if test="key == 'subject'"> -->
+<!--                 and subject like concat('%', #{word}, '%') -->
+<!--             </if> -->
+<!--             <if test="key != 'subject'"> -->
+<!--                 and ${key} = #{word} -->
+<!--             </if> -->
+<!--         </if> -->
+<!--     </sql> -->
+<!--     <select id="listQna" parameterType="map" resultMap="qna"> -->
+<!--         select q.article_no, q.user_id, q.subject, q.content, q.hit, q.register_time, m.user_name -->
+<!--         from qna q, members m -->
+<!--         where q.user_id = m.user_id -->
+<!--         <include refid="search"></include> -->
+<!--         order by q.article_no desc -->
+<!--         limit #{start}, #{listsize} -->
+<!--     </select> -->
 
     <insert id="writeQna" parameterType="Qna">
         insert into qna (user_id, subject, content, hit, register_time)
@@ -40,14 +67,6 @@
         </selectKey>
     </insert>
 
-    <select id="listQna" parameterType="map" resultMap="qna">
-        select q.article_no, q.user_id, q.subject, q.content, q.hit, q.register_time, m.user_name
-        from qna q, members m
-        where q.user_id = m.user_id
-        <include refid="search"></include>
-        order by q.article_no desc
-        limit #{start}, #{listsize}
-    </select>
 
     <select id="getQna" parameterType="int" resultMap="qna">
         select q.article_no, q.user_id, q.subject, q.content, q.hit, q.register_time, m.user_name
@@ -63,9 +82,9 @@
     </update>
 
     <update id="modifyQna" parameterType="Qna">
-        update board
+        update qna
         set subject = #{subject}, content = #{content}
-        where article_no = #{qnaNo}
+        where article_no = #{articleNo}
     </update>
 
     <delete id="deleteQna" parameterType="int">
@@ -73,13 +92,27 @@
         where article_no = #{qnaNo}
     </delete>
 
-    <select id="getTotalArticleCount" parameterType="map" resultType="int">
-        select count(article_no)
-        from board
-        <where>
-            <include refid="search"></include>
-        </where>
-    </select>
+<!--     <select id="getTotalArticleCount" parameterType="map" resultType="int"> -->
+<!--         select count(article_no) -->
+<!--         from qna -->
+<!--         <where> -->
+<!--             <include refid="search"></include> -->
+<!--         </where> -->
+<!--     </select> -->
+
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from qna
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+	</select>
+
 
     <insert id="writeMemo" parameterType="map">
         insert into memo (article_no,user_id, comment, memo_time)

@@ -1,6 +1,5 @@
 package com.ssafy.happyhouse.notice.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.happyhouse.notice.model.Notice;
+import com.ssafy.happyhouse.notice.model.NoticeParameter;
 import com.ssafy.happyhouse.notice.model.service.NoticeService;
-import com.ssafy.happyhouse.util.PageNavigation;
-import com.ssafy.happyhouse.util.SizeConstant;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -39,6 +38,9 @@ public class NoticeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(NoticeController.class);
 	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	private static final String UNDEFINED = "undefined";
+	
 	
 	private NoticeService noticeService;
 	private Map<String, String> map;
@@ -49,92 +51,61 @@ public class NoticeController {
 		this.noticeService = noticeService;
 	}
 
-//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		String act = request.getParameter("act");
-//		
-//		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
-//		String option = request.getParameter("option"); option = option==null?"latest":option;
-//		String key = ParameterCheck.nullToBlank(request.getParameter("key"));
-//		String word = ParameterCheck.nullToBlank(request.getParameter("word"));
-//
-//		String queryString = "?option="+option+"&pgno=" + pgNo + "&key=" + key + "&word=" + word;
-//		
-//		int spp = SizeConstant.SIZE_PER_PAGE;
-//		int startPage = (pgNo/spp)*spp + 1;
-//		request.setAttribute("startpage", startPage);
-//		request.setAttribute("option", option);
-//		
-//		map = new HashMap<>();
-//		map.put("option", option);
-//		map.put("pgno", pgNo + "");
-//		map.put("key", key);
-//		map.put("word", word);
-//		
-////		String path = "/index.jsp";
-////		if("list".equals(act)) {
-////			path = list(request, response);
-////			forward(request, response, path + queryString);
-////		} else if("mvwrite".equals(act)) {
-////			path = "/notice/write.jsp";
-////			redirect(request, response, path);
-////		} else if("write".equals(act)) {
-////			path = write(request, response);
-////			forward(request, response, path);
-////		} else if("view".equals(act)) {
-////			path = view(request, response);
-////			forward(request, response, path + queryString);
-////		} else if("mvmodify".equals(act)) {
-////			path = mvModify(request, response);
-////			forward(request, response, path);
-////		} else if("modify".equals(act)) {
-////			path = modify(request, response);
-////			forward(request, response, path);
-////		} else if("delete".equals(act)) {
-////			path = delete(request, response);
-////			redirect(request, response, path);
-////		} else if("search".equals(act)) { // 검색 기능 구현
-////			path = search(request, response);
-////			forward(request, response, path);
-////		} else {
-////			redirect(request, response,path);
-////		}
-//	}
-	
-	
-	// interceptor 해야됨
-	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.")
+	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.", response = List.class)
 	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
-			@ApiResponse(code = 500, message = "서버에러!!") })
+		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/notices")
-	private ResponseEntity<?> list(Map<String, String> map) {
-	
-		logger.debug("list parameter : {}", map);
+	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) NoticeParameter noticeParameter) throws Exception {
 		
+		Map<String, Object> responseMap = noticeService.makePageNavigation(noticeParameter);
 		
-		Map<String, Object> responseMap = new HashMap<String, Object>();
-		int maxPgNo = 1;
-		try {				
-			List<Notice> list = noticeService.listNotice(map);
-			logger.info("목록 조회 완료");
+		try {
+			logger.info("listArticle - 호출");
+			List<Notice> list = noticeService.listNotice(noticeParameter);
+			logger.debug("Notice list size : {}", list.size());
 			
-			if (list != null && !list.isEmpty()) {
-//				PageNavigation pageNavigation = noticeService.makePageNavigation(map);
-//				int cnt = noticeService.totalNoticeCount(map);
-//				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
-//				
-//				responseMap.put("list", list);
-//				responseMap.put("maxPgNo", maxPgNo);
-//				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
-				return new ResponseEntity<List<Notice>>(list, HttpStatus.OK);
-			}
-			else {
-				return new ResponseEntity<Integer>(maxPgNo, HttpStatus.NO_CONTENT);
-			}
-			
-		} catch (Exception e) {
+			responseMap.put("list", list);
+			responseMap.put("message", SUCCESS);
+			return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+		}
+		catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
+//	// interceptor 해야됨
+//	@ApiOperation(value = "공지사항 목록", notes = "공지사항의 전체 목록을 반환해 줍니다.")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "공지사항목록 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+//			@ApiResponse(code = 500, message = "서버에러!!") })
+//	@GetMapping("/notices")
+//	private ResponseEntity<?> list(Map<String, String> map) {
+//	
+//		logger.debug("list parameter : {}", map);
+//		
+//		
+//		Map<String, Object> responseMap = new HashMap<String, Object>();
+//		int maxPgNo = 1;
+//		try {				
+//			List<Notice> list = noticeService.listNotice(map);
+//			logger.info("목록 조회 완료");
+//			
+//			if (list != null && !list.isEmpty()) {
+////				PageNavigation pageNavigation = noticeService.makePageNavigation(map);
+////				int cnt = noticeService.totalNoticeCount(map);
+////				maxPgNo = (cnt / SizeConstant.SIZE_PER_LIST) + 1;
+////				
+////				responseMap.put("list", list);
+////				responseMap.put("maxPgNo", maxPgNo);
+////				return new ResponseEntity<Map<String, Object>>(responseMap, HttpStatus.OK);
+//				return new ResponseEntity<List<Notice>>(list, HttpStatus.OK);
+//			}
+//			else {
+//				return new ResponseEntity<Integer>(maxPgNo, HttpStatus.NO_CONTENT);
+//			}
+//			
+//		} catch (Exception e) {
+//			return exceptionHandling(e);
+//		}
+//	}
 
 //	@GetMapping("/notices/search")
 //	private ResponseEntity<?> search() {
@@ -152,7 +123,7 @@ public class NoticeController {
 	@ApiOperation(value = "공지사항 작성", notes = "공지사항을 등록합니다.")
 	@PostMapping("/notices")
 	private ResponseEntity<?> write(@RequestBody Notice notice) {
-		System.out.println(notice);
+		
 		logger.debug("write Notice : {}", notice);
 		
 		try {				
@@ -163,8 +134,13 @@ public class NoticeController {
 //					notice.setContent(request.getParameter("content")+i);
 //					noticeService.writeNotice(notice);
 //				}
-			noticeService.writeNotice(notice);
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			if (notice.getUserId() != null && notice.getSubject() != null && notice.getContent() != null) {
+				noticeService.writeNotice(notice);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);				
+			}
+			else {
+				return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+			}
 		} 
 		catch (Exception e) {
 			return exceptionHandling(e);
@@ -188,25 +164,6 @@ public class NoticeController {
 			return exceptionHandling(e);
 		}
 	}
-
-//	private String mvModify(HttpServletRequest request, HttpServletResponse response) {
-//		HttpSession session = request.getSession();
-//		User user = (User) session.getAttribute("userinfo");
-//		if(user != null) {
-//			try {
-//				int noticeNo = Integer.parseInt(request.getParameter("articleno"));
-//				Notice notice = noticeService.getNotice(noticeNo);				
-//				request.setAttribute("article",notice);
-//				return "/notice/modify.jsp";
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				request.setAttribute("msg", "공지사항 불러오는 중 에러발생!!!");
-//				return "/error/error.jsp";
-//			}
-//		} else {
-//			return "/user/login.jsp";
-//		}
-//	}
 
 	@ApiOperation(value = "공지사항 수정", notes = "공지사항을 수정합니다.")
 	@PutMapping("/notices")
@@ -237,7 +194,7 @@ public class NoticeController {
 
 	@ApiOperation(value = "공지사항 삭제", notes = "공지사항을 삭제합니다.")
 	@DeleteMapping("/notices")
-	private ResponseEntity<?> delete(@RequestParam("articleno") int noticeNo, int pgno) {
+	private ResponseEntity<?> delete(@RequestParam("articleno") int noticeNo, int pgNo) {
 		
 		logger.debug("delete noticeNo : {}", noticeNo);
 		
