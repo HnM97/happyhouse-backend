@@ -31,4 +31,9 @@ public class BookmarkServiceImpl implements BookmarkService{
     public void deleteBookmark(String userId, String aptCode) throws SQLException {
         bookmarkDao.deleteBookmark(userId, aptCode);
     }
+
+    @Override
+    public int checkBookmark(String userId, String aptCode) throws SQLException {
+        return bookmarkDao.checkBookmark(userId, aptCode);
+    }
 }

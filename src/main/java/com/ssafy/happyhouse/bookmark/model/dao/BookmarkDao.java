@@ -11,4 +11,5 @@ public interface BookmarkDao {
     public void createBookmark(String userId, String aptCode, String dongCode) throws SQLException;;
     public List<Bookmark> selectAptById(String userId) throws SQLException;
     public void deleteBookmark(String userId, String aptCode) throws SQLException;
+    public int checkBookmark(String userId, String aptCode) throws  SQLException;
 }

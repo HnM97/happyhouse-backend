@@ -28,10 +28,6 @@ CREATE TABLE IF NOT EXISTS happyhouse.members (
 alter table happyhouse.members modify user_password varchar(100);
 alter table members add token varchar(1000) null default null;
 
-insert into happyhouse.members (user_id, user_name, user_password, email_id, email_domain, join_date)
-values     ('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now()),
-           ('admin', '관리자', '1234', 'admin', 'google.com', now());
-
 commit;
 
 -- Table happyhouse.board
@@ -56,7 +52,7 @@ CREATE TABLE IF NOT EXISTS happyhouse.board (
     COLLATE = utf8mb4_0900_ai_ci;
 
 -- create table QnA
-
+drop table if exists qna;
 CREATE TABLE IF NOT EXISTS happyhouse.qna (
     user_id VARCHAR(16) NOT NULL,
     article_no INT NOT NULL AUTO_INCREMENT,
@@ -123,18 +119,21 @@ create table bookmark (
                           user_id varchar(16),
                           aptCode  bigint,
                           dongCode varchar(10),
-                          primary key(user_id, aptCode),
+                          bookmark_no  INT NOT NULL AUTO_INCREMENT,
+                          primary key(bookmark_no),
                           foreign key(user_id) references `members`(`user_id`),
-                          foreign key(aptCode) references `houseinfo`(`aptCode`)
-);
-
+                          foreign key(aptCode) references `houseinfo`(`aptCode`))
+						  ENGINE = InnoDB
+						  DEFAULT CHARACTER SET = utf8mb4
+						  COLLATE = utf8mb4_0900_ai_ci;
 
 -- view 생성
 drop view bookmarkinfo;
 create view bookmarkinfo as
-select bm.user_id, bm.aptCode, bm.dongcode, hi.apartmentName, hi.buildyear, hi.roadName, hi.jibun, hi.lng, hi.lat
-from bookmark as bm, houseinfo as hi
-where bm.aptCode = hi.aptCode;
+select bm.user_id as user_id, bm.aptCode as aptCode, bm.dongcode as dongCode, hi.apartmentName as apartmentname, hi.buildyear as buildYear, hi.roadName as roadName, hi.jibun as jibun, hi.lng as lng, hi.lat as lat, min(cast(replace(hi.dealAmount, ",","") as UNSIGNED)) as minAmount, max(cast(replace(hi.dealAmount, ",","") as UNSIGNED)) as maxAmount
+from bookmark as bm, house as hi
+where bm.aptCode = hi.aptCode and user_id = "aaa"
+group by bm.aptCode;
 
 
 drop view house;
@@ -146,10 +145,13 @@ where hi.aptcode = hd.aptcode;
 create index houseinfo_idx on houseinfo(aptCode);
 create index housedeal_idx on houseinfo(aptCode);
 
-drop view apartment;
+drop table apartment;
 create table apartment as
 select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, lng, lat, min(cast(replace(dealAmount, ",","") as UNSIGNED)) as minAmount, max(cast(replace(dealAmount, ",","") as UNSIGNED)) as maxAmount
+from house
 group by aptCode;
+
+select count(aptCode) from apartment;
 
 drop view sido;
 create view sido as

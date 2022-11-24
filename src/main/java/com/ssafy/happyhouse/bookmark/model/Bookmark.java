@@ -11,10 +11,13 @@ public class Bookmark {
     private double lng;
     private double lat;
 
+    private int minAmount;
+    private int maxAmount;
+
     public Bookmark() {
     }
 
-    public Bookmark(String userId, String aptCode, String dongCode, String apartmentName, int buildYear, String roadName, String jibun, double lng, double lat) {
+    public Bookmark(String userId, String aptCode, String dongCode, String apartmentName, int buildYear, String roadName, String jibun, double lng, double lat, int minAmount, int maxAmount) {
         this.userId = userId;
         this.aptCode = aptCode;
         this.dongCode = dongCode;
@@ -24,6 +27,8 @@ public class Bookmark {
         this.jibun = jibun;
         this.lng = lng;
         this.lat = lat;
+        this.minAmount = minAmount;
+        this.maxAmount = maxAmount;
     }
 
     public String getUserId() {
@@ -98,6 +103,22 @@ public class Bookmark {
         this.lat = lat;
     }
 
+    public int getMinAmount() {
+        return minAmount;
+    }
+
+    public void setMinAmount(int minAmount) {
+        this.minAmount = minAmount;
+    }
+
+    public int getMaxAmount() {
+        return maxAmount;
+    }
+
+    public void setMaxAmount(int maxAmount) {
+        this.maxAmount = maxAmount;
+    }
+
     @Override
     public String toString() {
         return "Bookmark{" +
@@ -110,6 +131,8 @@ public class Bookmark {
                 ", jibun='" + jibun + '\'' +
                 ", lng=" + lng +
                 ", lat=" + lat +
+                ", minAmount=" + minAmount +
+                ", maxAmount=" + maxAmount +
                 '}';
     }
 }
