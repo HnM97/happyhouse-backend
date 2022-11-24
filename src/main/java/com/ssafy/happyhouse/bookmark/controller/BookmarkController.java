@@ -76,6 +76,25 @@ public class BookmarkController {
         }
     }
 
+    @ApiOperation(value = "북마크 체크", notes = "북마크인지 확인합니다.")
+    @ApiResponses({ @ApiResponse(code = 200, message = "북마크 체크 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+            @ApiResponse(code = 500, message = "서버에러!!") })
+    @GetMapping("/check")
+    private ResponseEntity<?> checkBookmark(String userId, String aptCode){
+        logger.info("check called!");
+        logger.info(userId + " " +aptCode);
+        try{
+            int count = bookmarkService.checkBookmark(userId, aptCode);
+            boolean isBookmark = count > 0 ? true : false;
+            System.out.println(count);
+            System.out.println(isBookmark);
+            return new ResponseEntity<Boolean>(isBookmark, HttpStatus.OK);
+        } catch (Exception e){
+            return exceptionHandling(e);
+        }
+    }
+
+
     private ResponseEntity<?> exceptionHandling(Exception e) {
         return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

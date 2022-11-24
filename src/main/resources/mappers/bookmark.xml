@@ -13,6 +13,8 @@
         <result column="jibun" property="jibun"/>
         <result column="lng" property="lng"/>
         <result column="lat" property="lat"/>
+        <result column="minAmount" property="minAmount"/>
+        <result column="maxAmount" property="maxAmount"/>
     </resultMap>
 
     <insert id="createBookmark" parameterType="hashMap">
@@ -26,9 +28,15 @@
     </delete>
 
     <select id="selectAptById" parameterType="String" resultMap="bookmark">
-        select user_id, aptCode, dongCode, apartmentName, buildYear, roadName, jibun, lng, lat
+        select user_id, aptCode, dongCode, apartmentName, buildYear, roadName, jibun, lng, lat, minAmount, maxAmount
         from bookmarkinfo
         where user_id = #{userId}
+    </select>
+
+    <select id="checkBookmark" parameterType="hashMap" resultType="Integer">
+        select count(user_id)
+        from bookmarkinfo
+        where user_id = #{userId} and aptCode = #{aptCode};
     </select>
 
 

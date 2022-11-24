@@ -23,6 +23,7 @@ import javax.xml.ws.Response;
 @RestController
 @Api(tags="아파트  API")
 @RequestMapping("/house")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class HouseController{
 	private static final Logger logger = LoggerFactory.getLogger(HouseController.class);
 	HouseService houseService;
