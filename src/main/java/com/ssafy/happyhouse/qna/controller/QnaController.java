@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.happyhouse.notice.model.Notice;
 import com.ssafy.happyhouse.qna.model.Memo;
 import com.ssafy.happyhouse.qna.model.Qna;
 import com.ssafy.happyhouse.qna.model.QnaParameter;
@@ -125,9 +124,9 @@ public class QnaController {
     @ApiOperation(value = "Qna 수정", notes = "Qna를 수정합니다.")
     @PutMapping("/qnas")
     private ResponseEntity<?> modify(@RequestBody  Map<String, Object> map) {
-    	System.out.println(map.get("articleno"));
-    	System.out.println(map.get("subject"));
-    	System.out.println(map.get("content"));
+//    	System.out.println(map.get("articleno"));
+//    	System.out.println(map.get("subject"));
+//    	System.out.println(map.get("content"));
         try {
         	int qnaNo = Integer.parseInt(map.get("articleno").toString());
             Qna qna = qnaService.getQna(qnaNo);
@@ -138,7 +137,6 @@ public class QnaController {
                 qna.setSubject(String.valueOf(map.get("subject")));
                 qna.setContent(String.valueOf(map.get("content")));
                 qnaService.modifyQna(qna);
-                System.out.println(qnaService.getQna(qnaNo));
                 logger.info("수정완료");
                 return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
             }
@@ -161,44 +159,7 @@ public class QnaController {
         try {
             qnaService.deleteQna(qnaNo);
             logger.info("삭제완료");
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        catch (Exception e) {
-            return exceptionHandling(e);
-        }
-    }
-
-    @ApiOperation(value = "Memo 등록", notes = "Qna에 Memo를 등록합니다.")
-    @PostMapping("/qnas/memo")
-    private ResponseEntity<?> writeMemo(@RequestParam("articleno") int qnaNo, Memo memo){
-        logger.debug("write Qna : {}", memo);
-
-        try {
-//				Qna qna = new Notice();
-//				for(int i=1;i<=200;i++) {
-//					qna.setUserId(user.getUserId());
-//					qna.setSubject(request.getParameter("subject")+i);
-//					qna.setContent(request.getParameter("content")+i);
-//					qnaService.writeNotice(qna);
-//				}
-            qnaService.writeMemo(qnaNo, memo);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        catch (Exception e) {
-
-            return exceptionHandling(e);
-        }
-    }
-    @ApiOperation(value = "Memo 삭제", notes = "Qna의 특정 Memo를 삭제합니다.")
-    @DeleteMapping("/qnas/{articleno}/{memoNo}")
-    private ResponseEntity<?> deleteMemo(@RequestParam("articleno") int qnaNo, @RequestParam("memono") int memoNo, int pgNo) {
-
-        logger.debug("delete memoNo : {}", memoNo);
-
-        try {
-            qnaService.deleteMemo(qnaNo, memoNo);
-            logger.info("삭제완료");
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
         catch (Exception e) {
             return exceptionHandling(e);
@@ -226,6 +187,45 @@ public class QnaController {
             }
         } catch (Exception e){
             e.printStackTrace();
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "Memo 등록", notes = "Qna에 Memo를 등록합니다.")
+    @PostMapping("/qnas/{articleno}/memo")
+    private ResponseEntity<?> writeMemo(@PathVariable("articleNo") int qnaNo, @RequestBody Memo memo){
+    	
+        logger.debug("write Qna : {}", memo);
+
+        try {
+//				Qna qna = new Notice();
+//				for(int i=1;i<=200;i++) {
+//					qna.setUserId(user.getUserId());
+//					qna.setSubject(request.getParameter("subject")+i);
+//					qna.setContent(request.getParameter("content")+i);
+//					qnaService.writeNotice(qna);
+//				}
+            qnaService.writeMemo(qnaNo, memo);
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
+        catch (Exception e) {
+
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "Memo 삭제", notes = "Qna의 특정 Memo를 삭제합니다.")
+    @DeleteMapping("/qnas/memo")
+    private ResponseEntity<?> deleteMemo(@RequestParam("articleno") int qnaNo, int memoNo) {
+
+        logger.debug("delete memoNo : {}", memoNo);
+
+        try {
+            qnaService.deleteMemo(qnaNo, memoNo);
+            logger.info("삭제완료");
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }
+        catch (Exception e) {
             return exceptionHandling(e);
         }
     }
