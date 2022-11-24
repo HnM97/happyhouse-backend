@@ -26,11 +26,11 @@
 	</sql>
 	
 	<select id="listNotice" parameterType="map" resultMap="notice">
-		select article_no, user_id, subject, content, hit, register_time, user_name
+		select article_no, user_id, subject, content, hit, 
 				case when date_format(register_time, '%Y%m%d') = date_format(now(), '%Y%m%d')
 				then date_format(register_time, '%H:%i:%s')
 				else date_format(register_time, '%y.%m.%d')
-				end register_time
+				end register_time 
 		from board
 		<if test="word != null and word != ''">
 			<if test="key == 'subject'">

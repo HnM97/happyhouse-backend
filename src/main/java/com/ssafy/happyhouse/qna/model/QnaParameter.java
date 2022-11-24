@@ -1,10 +1,10 @@
-package com.ssafy.happyhouse.notice.model;
+package com.ssafy.happyhouse.qna.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "NoticeParameter : 공지사항 파라미터 정보", description = "공지사항의 글을 얻기 위한 부가적인 파라미터 정보")
-public class NoticeParameter {
+public class QnaParameter {
 
 	@ApiModelProperty(value = "현재 페이지 번호")
 	private int pgNo;
@@ -17,7 +17,7 @@ public class NoticeParameter {
 	@ApiModelProperty(value = "검색어")
 	private String word;
 	
-	public NoticeParameter() {
+	public QnaParameter() {
 		pgNo = 1;
 		spp = 10;
 	}

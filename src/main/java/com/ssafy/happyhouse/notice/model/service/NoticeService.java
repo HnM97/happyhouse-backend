@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.ssafy.happyhouse.notice.model.Notice;
 import com.ssafy.happyhouse.notice.model.NoticeParameter;
-import com.ssafy.happyhouse.util.PageNavigation;
 
 public interface NoticeService {
 
@@ -15,7 +14,7 @@ public interface NoticeService {
 	public List<Notice> listNotice(NoticeParameter noticeParameter) throws Exception;
 	
 //	PageNavigation makePageNavigation(Map<String, String> map) throws SQLException;
-	PageNavigation makePageNavigation(NoticeParameter noticeParameter) throws Exception;
+	Map<String, Object> makePageNavigation(NoticeParameter noticeParameter) throws Exception;
 	int totalNoticeCount(Map<String, String> map) throws SQLException;
 	
 	Notice getNotice(int noticeNo) throws SQLException;
