@@ -192,7 +192,7 @@ public class QnaController {
     }
 
     @ApiOperation(value = "Memo 등록", notes = "Qna에 Memo를 등록합니다.")
-    @PostMapping("/qnas/{articleno}/memo")
+    @PostMapping("/qnas/{articleNo}/memo")
     private ResponseEntity<?> writeMemo(@PathVariable("articleNo") int qnaNo, @RequestBody Memo memo){
     	
         logger.debug("write Qna : {}", memo);
