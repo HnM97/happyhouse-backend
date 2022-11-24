@@ -39,9 +39,10 @@ public class HouseController{
 		@ApiResponse(code = 204, message = "결과 없음!!"), 
 		@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping("/view")
-	private ResponseEntity<?> view(String aptCode) {
+	private ResponseEntity<?> view(@RequestParam String aptCode) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		logger.info("view called!!!");
+		logger.info(aptCode);
 		try {
 			List<House> aptInfos = houseService.selectApt(aptCode);
 
@@ -164,6 +165,19 @@ public class HouseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@ApiOperation(value = "도로명 주소(구/군까지) 반환", notes = "아파트 코드에 따른 도로명 주소(구/군까지) 반환")
+	@ApiResponses({ @ApiResponse(code = 200, message = "도로명 주소 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
+			@ApiResponse(code = 500, message = "서버에러!!") })
+	@GetMapping("/address")
+	private ResponseEntity<?> getRoadAddress(String regCode){
+		logger.info("get road address");
+		try{
+			String roadAddress = houseService.getRoadAddress(regCode);
+			return new ResponseEntity<>(roadAddress, HttpStatus.OK);
+		} catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

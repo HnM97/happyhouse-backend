@@ -149,7 +149,6 @@ create index housedeal_idx on houseinfo(aptCode);
 drop view apartment;
 create table apartment as
 select DISTINCT aptCode, dongcode, buildYear, apartmentName, roadName, jibun, lng, lat, min(cast(replace(dealAmount, ",","") as UNSIGNED)) as minAmount, max(cast(replace(dealAmount, ",","") as UNSIGNED)) as maxAmount
-from house
 group by aptCode;
 
 drop view sido;

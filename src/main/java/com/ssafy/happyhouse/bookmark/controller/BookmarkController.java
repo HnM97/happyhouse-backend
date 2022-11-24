@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Api(tags= "북마크 API")
@@ -33,15 +34,15 @@ public class BookmarkController {
     @ApiResponses({ @ApiResponse(code = 200, message = "북마크 설정 OK!!"), @ApiResponse(code = 404, message = "페이지없어!!"),
             @ApiResponse(code = 500, message = "서버에러!!") })
     @PostMapping
-    private ResponseEntity<?> create(String userId, String aptCode) {
-        logger.info(userId + " " + aptCode);
-        String dongCode = aptCode.substring(0,8);
-        try{
-            bookmarkService.createBookmark(userId, aptCode, dongCode);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        } catch (Exception e){
-            e.printStackTrace();
-            return exceptionHandling(e);
+    private ResponseEntity<?> create(@RequestBody Map<String, String> map) {
+        logger.info(map.get("userId") + " " + map.get("aptCode"));
+        String dongCode = map.get("aptCode").substring(0,8);
+            try{
+                bookmarkService.createBookmark(map.get("userId"), map.get("aptCode"), dongCode);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            } catch (Exception e){
+                e.printStackTrace();
+                return exceptionHandling(e);
         }
     }
     @ApiOperation(value = "북마크 목록 불러오기", notes = "특정 유저의 북마크 목록을 가져옵니다.")

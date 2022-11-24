@@ -17,13 +17,13 @@ public class House {
 	private double lng;
 	private double lat;
 
-	private int minAmout;
+	private int minAmount;
 	private int maxAmount;
 
 	public House() {
 	}
 
-	public House(String aptCode, String dongCode, String apartmentName, int buildYear, String dealAmount, String area, int dealYear, int dealMonth, int dealDay, String roadName, String jibun, double lng, double lat, int minAmout, int maxAmount) {
+	public House(String aptCode, String dongCode, String apartmentName, int buildYear, String dealAmount, String area, int dealYear, int dealMonth, int dealDay, String roadName, String jibun, double lng, double lat, int minAmount, int maxAmount) {
 		this.aptCode = aptCode;
 		this.dongCode = dongCode;
 		this.apartmentName = apartmentName;
@@ -37,24 +37,31 @@ public class House {
 		this.jibun = jibun;
 		this.lng = lng;
 		this.lat = lat;
-		this.minAmout = minAmout;
+		this.minAmount = minAmount;
 		this.maxAmount = maxAmount;
 	}
 
-	public int getMinAmout() {
-		return minAmout;
+	public int getMinAmount() {
+		return minAmount;
 	}
 
-	public void setMinAmout(int minAmout) {
-		this.minAmout = minAmout;
+	public void setMinAmount(int minAmount) {
+		this.minAmount = minAmount;
+	}
+
+
+
+	public int getMaxAmount() {
+		return maxAmount;
+	}
+
+	public void setMaxAmount(int maxAmount) {
+		this.maxAmount = maxAmount;
 	}
 
 	public String getAptCode() {
 		return aptCode;
 	}
-
-
-
 
 	public void setAptCode(String aptCode) {
 		this.aptCode = aptCode;
