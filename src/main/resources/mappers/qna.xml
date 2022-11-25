@@ -121,7 +121,8 @@
 
     <delete id="deleteMemo" parameterType="int">
         delete from memo
-        where article_no = #{articleNo}
+        where article_no = #{qnaNo}
+          and memo_no = #{memoNo}
     </delete>
 
     <select id="listMemo" parameterType="int" resultMap="memo">

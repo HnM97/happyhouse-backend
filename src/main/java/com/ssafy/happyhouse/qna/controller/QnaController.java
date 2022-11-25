@@ -217,8 +217,8 @@ public class QnaController {
     @ApiOperation(value = "Memo 삭제", notes = "Qna의 특정 Memo를 삭제합니다.")
     @DeleteMapping("/qnas/memo")
     private ResponseEntity<?> deleteMemo(@RequestParam("articleno") int qnaNo, int memoNo) {
-
-        logger.debug("delete memoNo : {}", memoNo);
+    	
+        logger.debug("delete memoNo : {} {}", qnaNo, memoNo );
 
         try {
             qnaService.deleteMemo(qnaNo, memoNo);
